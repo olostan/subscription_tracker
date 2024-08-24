@@ -1,39 +1,57 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Subscription Tracker
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages). 
+[![pub package](https://img.shields.io/pub/v/subscription_tracker.svg)](https://pub.dev/packages/subscription_tracker)
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Effortless subscription management for Dart Streams. Track, cancel, and simplify your asynchronous code.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+* **Centralized Subscription Tracking:** Keep all your `Stream` subscriptions organized within a `SubscriptionTracker` instance.
+* **Bulk Cancellation:**  Cleanly unsubscribe from all tracked subscriptions with a single `cancelAll()` call.
+* **Stream Extension:**  Leverage the `listenTracked` extension method for seamless integration with existing `Stream` usage.
+* **Lightweight:**  Minimal overhead, ensuring your application remains performant.
 
-## Getting started
+## Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add `subscription_tracker` to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  subscription_tracker: ^latest_version
+```
+
+Then, run `dart pub get`.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
 ```dart
-const like = 'sample';
+import 'package:subscription_tracker/subscription_tracker.dart';
+
+void main() {
+  final tracker = SubscriptionTracker();
+
+  final subscription1 = someStream.listenTracked(tracker, (data) {
+    // Handle stream data
+  });
+
+  final subscription2 = anotherStream.listenTracked(tracker, (data) {
+    // Handle stream data
+  });
+
+  // ... Later in your code, when you want to cancel all subscriptions:
+  tracker.cancelAll(); 
+}
 ```
 
-## Additional information
+## Why Subscription Tracker?
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+* **Prevent Memory Leaks**: Avoid unintentional subscriptions lingering in memory.
+* **Code Clarity**: Centralize subscription management for cleaner, more maintainable code.
+* **Simplified Cleanup**: Ensure resources are released correctly when components are disposed of.
+
+## Contributing
+Contributions are welcome! Feel free to open issues or submit pull requests.
+
+## License
+
+[BSD Clause 3](LICENSE)
