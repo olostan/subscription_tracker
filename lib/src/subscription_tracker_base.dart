@@ -14,12 +14,13 @@ final class SubscriptionTracker {
   final List<StreamSubscription> _subscriptions = [];
 
   cancelAll() async {
-    var cancelled = 0;
-    for (var subscription in _subscriptions) {
-      await subscription.cancel();
-      cancelled++;
+    List<Future<void>> cancellations = [];
+    for (final s in _subscriptions) {
+      cancellations.add(s.cancel());
     }
+    final n = _subscriptions.length;
     _subscriptions.clear();
-    return cancelled;
+    await Future.wait(cancellations);
+    return n;
   }
 }

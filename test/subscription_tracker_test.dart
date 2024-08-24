@@ -16,14 +16,32 @@ void main() {
       expect(cancelled, 0);
     });
 
-    test('Should cancel all subscriptions', () async {
-      final controller = StreamController<int>();
-      callback(int i) {}
-      controller.stream.listenTracked(tracker, callback);
-      controller.add(1);
-      await tracker.cancelAll();
-      controller.add(2);
-      expectAsync1(callback, count: 1);
+    test('Should cancel a subscription', () async {
+      var tracker = SubscriptionTracker();
+      final results = StreamController<int>();
+      Stream.fromIterable([1, 2, 3, 4, 5]).listenTracked(tracker, (i) async {
+        results.add(i);
+        if (i > 1) {
+          await tracker.cancelAll();
+          results.close();
+        }
+      });
+      expect(results.stream, emitsInOrder([1, 2, emitsDone]));
+    });
+    test('Should cancel multiple subscriptions', () async {
+      var tracker = SubscriptionTracker();
+      final results = StreamController<int>();
+      Stream.fromIterable([1, 2, 3, 4, 5]).listenTracked(tracker, (i) async {
+        results.add(i);
+        if (i > 2) {
+          await tracker.cancelAll();
+          results.close();
+        }
+      });
+      Stream.fromIterable([10, 11, 12, 13]).listenTracked(tracker, (i) async {
+        results.add(i);
+      });
+      expect(results.stream, emitsInOrder([1, 10, 2, 11, 3, emitsDone]));
     });
   });
 }
